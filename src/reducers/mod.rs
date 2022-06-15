@@ -24,6 +24,8 @@ pub mod transactions_count_by_contract_address;
 pub mod transactions_count_by_contract_address_by_epoch;
 #[cfg(feature = "unstable")]
 pub mod transactions_count_by_epoch;
+#[cfg(feature = "unstable")]
+pub mod transactions_count_by_script_hash;
 
 #[derive(Deserialize)]
 #[serde(tag = "type")]
@@ -48,6 +50,10 @@ pub enum Config {
     TotalTransactionsCountByContractAddresses(
         total_transactions_count_by_contract_addresses::Config,
     ),
+    #[cfg(feature = "unstable")]
+    TransactionsCountByScriptHash(
+        transactions_count_by_script_hash::Config,
+    ),
 }
 
 impl Config {
@@ -69,6 +75,8 @@ impl Config {
             Config::TransactionsCountByContractAddressByEpoch(c) => c.plugin(chain),
             #[cfg(feature = "unstable")]
             Config::TotalTransactionsCountByContractAddresses(c) => c.plugin(),
+            #[cfg(feature = "unstable")]
+            Config::TransactionsCountByScriptHash(c) => c.plugin(),
         }
     }
 }
@@ -123,6 +131,10 @@ pub enum Reducer {
     TotalTransactionsCountByContractAddresses(
         total_transactions_count_by_contract_addresses::Reducer,
     ),
+    #[cfg(feature = "unstable")]
+    TransactionsCountByScriptHash(
+        transactions_count_by_script_hash::Reducer,
+    ),
 }
 
 impl Reducer {
@@ -149,6 +161,8 @@ impl Reducer {
             Reducer::TransactionsCountByContractAddressByEpoch(x) => x.reduce_block(block, output),
             #[cfg(feature = "unstable")]
             Reducer::TotalTransactionsCountByContractAddresses(x) => x.reduce_block(block, output),
+            #[cfg(feature = "unstable")]
+            Reducer::TransactionsCountByScriptHash(x) => x.reduce_block(block, output),
         }
     }
 }
